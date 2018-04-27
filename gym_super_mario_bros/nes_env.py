@@ -98,7 +98,7 @@ class NESEnv(gym.Env, gym.utils.EzPickle):
         self._open_pipes()
         # build the FCEUX command
         command = ' '.join([
-            'fceux',
+            './fceux',
             *self.fceux_args,
             '--loadlua',
             self.lua_interface_path,
