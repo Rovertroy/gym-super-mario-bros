@@ -5,13 +5,13 @@
 #include "throttle.h"
 
 static const double Slowest = 0.015625; // 1/64x speed (around 1 fps on NTSC)
-static const double Fastest = 128;       // 32x speed   (around 1920 fps on NTSC)
+static const double Fastest = 1440;       // 32x speed   (around 1920 fps on NTSC)
 static const double Normal  = 1.0;      // 1x speed    (around 60 fps on NTSC)
 
 static uint64 Lasttime, Nexttime;
 static long double desired_frametime;
 static int InFrame;
-double g_fpsScale = Normal; // used by sdl.cpp
+double g_fpsScale = Fastest; // used by sdl.cpp
 bool MaxSpeed = false;
 
 /* LOGMUL = exp(log(2) / 3)
@@ -44,47 +44,7 @@ RefreshThrottleFPS()
 int
 SpeedThrottle()
 {
-	if(g_fpsScale >= 32)
-	{
-		return 0; /* Done waiting */
-	}
-	uint64 time_left;
-	uint64 cur_time;
-
-	if(!Lasttime)
-		Lasttime = SDL_GetTicks();
-
-	if(!InFrame)
-	{
-		InFrame = 1;
-		Nexttime = Lasttime + desired_frametime * 1000;
-	}
-
-	cur_time  = SDL_GetTicks();
-	if(cur_time >= Nexttime)
-		time_left = 0;
-	else
-		time_left = Nexttime - cur_time;
-
-	if(time_left > 50)
-	{
-		time_left = 50;
-		/* In order to keep input responsive, don't wait too long at once */
-		/* 50 ms wait gives us a 20 Hz responsetime which is nice. */
-	}
-	else
-		InFrame = 0;
-
-	/*fprintf(stderr, "attempting to sleep %Ld ms, frame complete=%s\n",
-		time_left, InFrame?"no":"yes");*/
-	SDL_Delay(time_left);
-
-	if(!InFrame)
-	{
-		Lasttime = SDL_GetTicks();
-		return 0; /* Done waiting */
-	}
-	return 1; /* Must still wait some more */
+	return 0;
 }
 
 /**

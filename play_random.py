@@ -8,7 +8,7 @@ env = gym_super_mario_bros.make('SuperMarioBros-v1')
 
 try:
     done = True
-    progress = tqdm(range(500))
+    progress = tqdm(range(2000))
     for step in progress:
         if done:
             state = env.reset()
